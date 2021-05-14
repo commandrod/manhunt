@@ -15,6 +15,7 @@ import java.util.List;
 
 public class Manhunt implements CommandExecutor {
 
+    // Speedrunner getter & setter
     private static Player speedrunner;
     public static Player getSpeedrunner(){
         return speedrunner;
@@ -52,10 +53,8 @@ public class Manhunt implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Player p = (Player) sender;
 
-        String cmdName = "manhunt";
-
-        if (cmd.getName().equals(cmdName) && sender instanceof Player) {
-            if (p.hasPermission(cmdName + "admin")) {
+        if (cmd.getName().equalsIgnoreCase("manhunt")) {
+            if (p.hasPermission("manhunt.admin")) {
                 if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("help")) {
                         p.sendMessage(Utils.color("&3========== &bManhunt &3==========" +
@@ -78,12 +77,14 @@ public class Manhunt implements CommandExecutor {
                     } else if (!ready && args[0].equalsIgnoreCase("forceend")){
                         p.sendMessage(Utils.color("&cThe game hasn't been set up yet."));
                     } else if (args[0].equalsIgnoreCase("start") && ready){
+                        // (Coming Soon) timer, sounds, and make the hunters unable to move for x amount of seconds (configable)
                         Bukkit.broadcastMessage(Utils.color("&3The manhunt has started!"));
                         border(p, false);
                         pvp = true;
                         ready = true;
                         game = true;
                     } else if (!ready && args[0].equalsIgnoreCase("reloadconfig") || args[0].equalsIgnoreCase("rlconfig")) {
+                        // Problem with the config, will be fixed.
                         //plugin.reloadConfig();
                         p.sendMessage(Utils.color("&cCurrently disabled."));
                     } else if (args[0].equalsIgnoreCase("setspawn")) {
@@ -104,16 +105,17 @@ public class Manhunt implements CommandExecutor {
                             pvp = false;
                             speedrunner = target;
                             for (Player players : Bukkit.getOnlinePlayers()) {
-                                // Remove players that were in the list before - Bug fix
+                                // Remove all players - Bug fix
                                 hunters.remove(players);
+                                // Add all players
                                 hunters.add(players);
-                                // Removes the speedrunner from the total players
+                                // Remove speedrunner from all players
                                 hunters.remove(speedrunner);
 
                                 players.getInventory().clear();
                             }
                             for (int i = 0; i < hunters.size(); i++) {
-                                // Hunters setup (compass, messages)
+                                // Hunters setup (Compasses, Messages, etc)
                                 hunters.get(i).getInventory().addItem(Compass());
                                 hunters.get(i).setCompassTarget(speedrunner.getLocation());
                                 hunters.get(i).sendMessage(Utils.color("&3You've been assigned as a &bHunter&3.\nPlease wait for the game to begin."));
@@ -129,6 +131,7 @@ public class Manhunt implements CommandExecutor {
                             p.sendMessage(Utils.color("&cThe player &l" + args[1] + " &r&cis not online!"));
                         }
                     }
+                    // Adding soon
                     /*if (args[0].equalsIgnoreCase("border") && game == true || ready){
                         if (StringUtils.isNumeric(args[1])){
                             p.getWorld().getWorldBorder().setSize(plugin.getConfig().getInt("game.border-size"));
@@ -145,9 +148,6 @@ public class Manhunt implements CommandExecutor {
             } else {
                 p.sendMessage(Utils.color("&cInsufficient permissions."));
             }
-        } else {
-            System.out.println("[" + cmdName + "] An error has occured.");
-            return true;
         }
         return true;
     }
