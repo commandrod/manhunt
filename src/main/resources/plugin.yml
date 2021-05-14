@@ -1,0 +1,13 @@
+name: Manhunt
+version: ${project.version}
+main: me.commandrod.manhunt.Main
+api-version: 1.16
+authors: [ commandROD ]
+description: Custom coded plugin for manhunt.
+commands:
+  manhunt:
+    usage: /<command> <help|speedrunner|sr|start|forceend> [player]
+    description: Main command for the entire plugin.
+permissions:
+  manhunt.admin:
+    description: Access to all of the commands.

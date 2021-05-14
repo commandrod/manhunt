@@ -1,0 +1,7 @@
+# Shows the world the speedrunner is in the compass description
+show-world: true
+# Messages
+permission-message: '&cInsufficient permissions.'
+join-message: '&3Welcome &b&l<player> &r&3to Minecraft Manhunt!'
+death-message: '&cThe speedrunner died! The hunters won the game!'
+finish-message: '&3The speedrunner has managed to kill the Ender Dragon! GG!'
