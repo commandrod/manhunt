@@ -41,7 +41,7 @@ public class Manhunt implements CommandExecutor {
     public static Location spawnLoc;
     public static void border(Player p, boolean toggle){
         if (toggle){
-            p.getWorld().getWorldBorder().setSize(11);
+            p.getWorld().getWorldBorder().setSize(12);
         }
         if (!toggle){
             p.getWorld().getWorldBorder().setSize(4000);
