@@ -40,98 +40,101 @@ public class Manhunt implements CommandExecutor {
     public static boolean ready;
     public static boolean pvp;
     public static Location spawnLoc;
-    public static void border(Player p, boolean toggle){
-        if (toggle){
+    public static void border(Player p, boolean border){
+        if (border){
             p.getWorld().getWorldBorder().setSize(14);
         }
-        if (!toggle){
+        if (!border){
             p.getWorld().getWorldBorder().setSize(4000);
         }
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Player p = (Player) sender;
-
-        if (cmd.getName().equalsIgnoreCase("manhunt")) {
-            if (p.hasPermission("manhunt.admin")) {
-                if (args.length == 1) {
-                    if (args[0].equalsIgnoreCase("help")) {
-                        p.sendMessage(Utils.color("&3========== &bManhunt &3==========" +
-                                "\n&b - &3/manhunt help - &bShows this menu." +
-                                "\n&b - &3/manhunt speedrunner [player] - &bSets the speedrunner for the game" +
-                                "\n&b - &3/manhunt forceend - &bStops the game in case of a bug." +
-                                "\n&b - &3/manhunt start - &bStarts the game." +
-                                "\n&b - &3/manhunt reloadconfig - &bReloads the config file."));
-                        //"\n&b - &3/manhunt border <number> - &bChanges the border size."));
-                    } else if (args[0].equalsIgnoreCase("forceend") && ready) {
-                        border(p, true);
-                        pvp = false;
-                        ready = false;
-                        game = false;
-                        Bukkit.broadcastMessage(Utils.color("&cThe game has been force stopped."));
-                        speedrunner.getWorld().getWorldBorder().setCenter(speedrunner.getLocation());
-                        for (Player players : Bukkit.getOnlinePlayers()){
-                            players.teleport(speedrunner);
-                        }
-                    } else if (!ready && args[0].equalsIgnoreCase("forceend")){
-                        p.sendMessage(Utils.color("&cThe game hasn't been set up yet."));
-                    } else if (args[0].equalsIgnoreCase("start") && ready){
-                        // (Coming Soon) timer, sounds, and make the hunters unable to move for x amount of seconds (configable)
-                        Bukkit.broadcastMessage(Utils.color("&3The manhunt has started!"));
-                        border(p, false);
-                        pvp = true;
-                        ready = true;
-                        game = true;
-                    } else if (!ready && args[0].equalsIgnoreCase("reloadconfig") || args[0].equalsIgnoreCase("rlconfig")) {
-                        // Problem with the config, will be fixed.
-                        //plugin.reloadConfig();
-                        p.sendMessage(Utils.color("&cCurrently disabled."));
-                    } else if (args[0].equalsIgnoreCase("setspawn")) {
-                        spawnLoc = p.getLocation();
-                        p.getWorld().getWorldBorder().setCenter(spawnLoc);
-                        p.sendMessage(Utils.color("&3Changed spawn location."));
-                    } else if (!ready){
-                        p.sendMessage(Utils.color("&cThe game hasn't been set up yet."));
-                    } else {
-                        p.sendMessage(Utils.color("&cWrong usage! /manhunt help"));
-                    }
-                } else if (args.length == 2){
-                    Player target = Bukkit.getPlayer(args[1]);
-                    if (args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("sr")) {
-                        if (target != null && !ready){
-                            // Game is ready to start
-                            ready = true;
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
+            if (cmd.getName().equalsIgnoreCase("manhunt")) {
+                if (p.hasPermission("manhunt.admin")) {
+                    if (args.length == 1) {
+                        if (args[0].equalsIgnoreCase("help")) {
+                            p.sendMessage(Utils.color("&3========== &bManhunt &3==========" +
+                                    "\n&b - &3/manhunt help - &bShows this menu." +
+                                    "\n&b - &3/manhunt speedrunner [player] - &bSets the speedrunner for the game" +
+                                    "\n&b - &3/manhunt forceend - &bStops the game in case of a bug." +
+                                    "\n&b - &3/manhunt start - &bStarts the game." +
+                                    "\n&b - &3/manhunt reloadconfig - &bReloads the config file."));
+                            //"\n&b - &3/manhunt border <number> - &bChanges the border size."));
+                        } else if (args[0].equalsIgnoreCase("forceend") && ready) {
+                            border(p, true);
                             pvp = false;
-                            speedrunner = target;
+                            ready = false;
+                            game = false;
+                            Bukkit.broadcastMessage(Utils.color("&cThe game has been force stopped."));
+                            speedrunner.getWorld().getWorldBorder().setCenter(speedrunner.getLocation());
                             for (Player players : Bukkit.getOnlinePlayers()) {
-                                // Remove all players - Bug fix
-                                hunters.remove(players);
-                                // Add all players
-                                hunters.add(players);
-                                // Remove speedrunner from all players
-                                hunters.remove(speedrunner);
-
-                                players.getInventory().clear();
+                                players.teleport(speedrunner);
                             }
-                            for (int i = 0; i < hunters.size(); i++) {
-                                // Hunters setup (Compasses, Messages, etc)
-                                hunters.get(i).getInventory().addItem(Compass());
-                                hunters.get(i).setCompassTarget(speedrunner.getLocation());
-                                hunters.get(i).sendMessage(Utils.color("&3You've been assigned as a &bHunter&3.\nPlease wait for the game to begin."));
-                                speedrunner.sendMessage(Utils.color("&3You've been assigned as a &bSpeedrunner&3.\nPlease wait for the game to begin."));
-                                Bukkit.broadcastMessage(Utils.color("&3There are a total of &b" + hunters.size() + " &3hunters."));
-                                hunters.get(i).sendMessage(Utils.color("&3Target has been set to " + "&b" + speedrunner.getName() + "&3."));
-                            }
-                            // If hunters are less or equal to 0 (somehow lol)
-                            if (hunters.size() <= 0) {
-                                p.sendMessage(Utils.color("&cNot enough players to start."));
-                            }
-                        } else if (target == null){
-                            p.sendMessage(Utils.color("&cThe player &l" + args[1] + " &r&cis not online!"));
+                        } else if (!ready && args[0].equalsIgnoreCase("forceend")) {
+                            p.sendMessage(Utils.color("&cThe game hasn't been set up yet."));
+                        } else if (args[0].equalsIgnoreCase("start") && ready) {
+                            // (Coming Soon) timer, sounds, and make the hunters unable to move for x amount of seconds (configable)
+                            Bukkit.broadcastMessage(Utils.color("&3The manhunt has started!"));
+                            border(p, false);
+                            pvp = true;
+                            ready = true;
+                            game = true;
+                        } else if (!ready && args[0].equalsIgnoreCase("reloadconfig") || args[0].equalsIgnoreCase("rlconfig")) {
+                            // Problem with the config, will be fixed.
+                            //plugin.reloadConfig();
+                            p.sendMessage(Utils.color("&cCurrently disabled."));
+                        } else if (args[0].equalsIgnoreCase("setspawn")) {
+                            spawnLoc = p.getLocation();
+                            p.getWorld().getWorldBorder().setCenter(spawnLoc);
+                            p.sendMessage(Utils.color("&3Changed spawn location."));
+                        } else if (!ready) {
+                            p.sendMessage(Utils.color("&cThe game hasn't been set up yet."));
+                        } else {
+                            p.sendMessage(Utils.color("&cWrong usage! /manhunt help"));
                         }
-                    }
-                    // Adding soon
+                    } else if (args.length == 2) {
+                        Player target = Bukkit.getPlayer(args[1]);
+                        if (args[0].equalsIgnoreCase("speedrunner") || args[0].equalsIgnoreCase("sr")) {
+                            if (target != null && !ready) {
+                                if (Bukkit.getOnlinePlayers().size() > 1) {
+                                    // Game is ready to start
+                                    ready = true;
+                                    pvp = false;
+                                    speedrunner = target;
+                                    // Hunters handling
+                                    for (Player players : Bukkit.getOnlinePlayers()) {
+                                        // Remove all players - Bug fix
+                                        hunters.remove(players);
+                                        // Add all players
+                                        hunters.add(players);
+                                        // Remove speedrunner from all players
+                                        hunters.remove(speedrunner);
+
+                                        players.getInventory().clear();
+                                    }
+                                    // Check if hunters are valid, (more than 1 hunter)
+                                    for (int i = 0; i < hunters.size(); i++) {
+                                        // Hunters setup (Compasses, Messages, etc)
+                                        hunters.get(i).getInventory().addItem(Compass());
+                                        hunters.get(i).setCompassTarget(speedrunner.getLocation());
+                                        hunters.get(i).sendMessage(Utils.color("&3You've been assigned as a &bHunter&3.\nPlease wait for the game to begin."));
+                                        speedrunner.sendMessage(Utils.color("&3You've been assigned as a &bSpeedrunner&3.\nPlease wait for the game to begin."));
+                                        hunters.get(i).sendMessage(Utils.color("&3Target has been set to " + "&b" + speedrunner.getName() + "&3."));
+                                        Bukkit.broadcastMessage(Utils.color("&3There are a total of &b" + hunters.size() + " &3hunters."));
+                                    }
+                                } else {
+                                    p.sendMessage(Utils.color("&cNot enough players to start."));
+                                }
+                                // If hunters are less or equal to 0 (somehow lol)
+                            } else if (target == null) {
+                                p.sendMessage(Utils.color("&cThe player &l" + args[1] + " &r&cis not online!"));
+                            }
+                        }
+                        // Adding soon
                     /*if (args[0].equalsIgnoreCase("border") && game == true || ready){
                         if (StringUtils.isNumeric(args[1])){
                             p.getWorld().getWorldBorder().setSize(plugin.getConfig().getInt("game.border-size"));
@@ -142,12 +145,15 @@ public class Manhunt implements CommandExecutor {
                     } else if (game != true || ready != true){
                         p.sendMessage(Utils.color("&cThe game haven't been set up yet."));
                     }*/
+                    } else {
+                        p.sendMessage(Utils.color("&cWrong usage! /manhunt help"));
+                    }
                 } else {
-                    p.sendMessage(Utils.color("&cWrong usage! /manhunt help"));
+                    p.sendMessage(Utils.color("&cInsufficient permissions."));
                 }
-            } else {
-                p.sendMessage(Utils.color("&cInsufficient permissions."));
             }
+        } else {
+            sender.sendMessage("This command can be executed only by a player.");
         }
         return true;
     }
