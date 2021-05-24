@@ -3,22 +3,22 @@ A manhunt spigot plugin.
 ___
 
 ### How to install
-Download the jar file here: https://www.spigotmc.org/resources/manhunt-plugin.92337/download?version=398605.
-
+Download the jar file here: https://www.spigotmc.org/resources/manhunt-plugin.92337
+Note: The spigot page might be outdated, the updated code is in the github!
 ___
 
 ### Plugin commands:
 - ``/manhunt help``<br />
-show all commands
+Shows all commands.
 
 - ``/manhunt sr [player]`` <br />
-set speedrunner to [player]
+Sets speedrunner to [player].
 
 - ``/manhunt start``<br />
-let the games begin
+Starts the game.
 
 - ``/manhunt forceend`` <br />
-finish the game in the middle of it
+Force end the game. 
 
 ### Plugin permisions
 - manhunt.admin
