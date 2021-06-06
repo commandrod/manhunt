@@ -1,53 +1,16 @@
 package me.commandrod.manhunt;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
+import static me.commandrod.manhunt.Utils.*;
 
 public class Manhunt implements CommandExecutor {
 
-    // Speedrunner getter & setter
-    private static Player speedrunner;
-    public static Player getSpeedrunner(){
-        return speedrunner;
-    }
-
-    public static ItemStack Compass() {
-        ItemStack compass = new ItemStack(Material.COMPASS);
-        ItemMeta meta = compass.getItemMeta();
-        List<String> lore = new ArrayList<>();
-        meta.setDisplayName(Utils.color("&3Manhunt Compass"));
-        lore.add(Utils.color("&3Currently pointing towards &b" + getSpeedrunner().getName()));
-        lore.add(Utils.color("&b" + getSpeedrunner().getName() + " &3is currently in &b" + getSpeedrunner().getWorld().getName()));
-        lore.add(Utils.color("&3Right click to update the location!"));
-        meta.setLore(lore);
-        compass.setItemMeta(meta);
-        return compass;
-    }
-
-    // Hunters handling
-    public static ArrayList<Player> hunters = new ArrayList<Player>();
-    public static boolean game;
-    public static boolean ready;
-    public static boolean pvp;
-    public static Location spawnLoc;
-    public static void border(Player p, boolean border){
-        if (border){
-            p.getWorld().getWorldBorder().setSize(14);
-        }
-        if (!border){
-            p.getWorld().getWorldBorder().setSize(4000);
-        }
-    }
+    public static Player speedrunner;
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -62,7 +25,9 @@ public class Manhunt implements CommandExecutor {
                                     "\n&b - &3/manhunt speedrunner [player] - &bSets the speedrunner for the game" +
                                     "\n&b - &3/manhunt forceend - &bStops the game in case of a bug." +
                                     "\n&b - &3/manhunt start - &bStarts the game." +
-                                    "\n&b - &3/manhunt reloadconfig - &bReloads the config file."));
+                                    //"\n&b - &3/manhunt reloadconfig - &bReloads the config file." +
+                                    "\n&b - &3/manhunt blockbypass - &bAdmin bypass to block interactions pre-game."
+                                    ));
                             //"\n&b - &3/manhunt border <number> - &bChanges the border size."));
                         } else if (args[0].equalsIgnoreCase("forceend") && ready) {
                             border(p, true);
@@ -70,13 +35,14 @@ public class Manhunt implements CommandExecutor {
                             ready = false;
                             game = false;
                             Bukkit.broadcastMessage(Utils.color("&cThe game has been force stopped."));
-                            speedrunner.getWorld().getWorldBorder().setCenter(speedrunner.getLocation());
+                            getSpeedrunner().getWorld().getWorldBorder().setCenter(getSpeedrunner().getLocation());
                             for (Player players : Bukkit.getOnlinePlayers()) {
-                                players.teleport(speedrunner);
+                                players.teleport(getSpeedrunner());
                             }
                         } else if (!ready && args[0].equalsIgnoreCase("forceend")) {
                             p.sendMessage(Utils.color("&cThe game hasn't been set up yet."));
                         } else if (args[0].equalsIgnoreCase("start") && ready) {
+                            //p.sendMessage(Utils.color("&3The game is starting..."));
                             // (Coming Soon) timer, sounds, and make the hunters unable to move for x amount of seconds (configable)
                             Bukkit.broadcastMessage(Utils.color("&3The manhunt has started!"));
                             border(p, false);
@@ -91,6 +57,16 @@ public class Manhunt implements CommandExecutor {
                             spawnLoc = p.getLocation();
                             p.getWorld().getWorldBorder().setCenter(spawnLoc);
                             p.sendMessage(Utils.color("&3Changed spawn location."));
+                        } else if (!game && args[0].equalsIgnoreCase("blockbypass")) {
+                            if (!blockBypass) {
+                                p.sendMessage(Utils.color("&3Block bypassing is currently &aenabled&3."));
+                                blockBypass = true;
+                            } else if (blockBypass) {
+                                p.sendMessage(Utils.color("&3Block bypassing is currently &cdisabled&3."));
+                                blockBypass = false;
+                            }
+                        } else if (game) {
+                            p.sendMessage(Utils.color("&cThe game has already started!"));
                         } else if (!ready) {
                             p.sendMessage(Utils.color("&cThe game hasn't been set up yet."));
                         } else {
@@ -111,7 +87,7 @@ public class Manhunt implements CommandExecutor {
                                         hunters.remove(players);
                                         // Add all players
                                         hunters.add(players);
-                                        // Remove speedrunner from all players
+                                        // Remove  from all players
                                         hunters.remove(speedrunner);
 
                                         players.getInventory().clear();
