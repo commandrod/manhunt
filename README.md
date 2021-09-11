@@ -1,24 +1,25 @@
-# manhunt
-A manhunt spigot plugin.
+# Manhunt
+Minecraft plugin made for Spigot servers.
 ___
 
 ### How to install
 Download the jar file here: https://www.spigotmc.org/resources/manhunt-plugin.92337
-Note: The spigot page might be outdated, the updated code is in the github!
+Note: I will try to update the spigot page but the latest release will be on the github releases!
 ___
 
 ### Plugin commands:
 - ``/manhunt help``<br />
 Shows all commands.
 
-- ``/manhunt sr [player]`` <br />
-Sets speedrunner to [player].
+- ``/manhunt speedrunner [player]`` <br />
+Defines the speedrunner and puts the game into a ready state.
 
 - ``/manhunt start``<br />
 Starts the game.
 
 - ``/manhunt forceend`` <br />
-Force end the game. 
+Force ends the game in case of a bug. 
+---
 
 ### Plugin permisions
 - manhunt.admin
@@ -26,17 +27,17 @@ Force end the game.
 ___
 
 ### Why you should install my plugin over others?
-Well, I'm planning on adding random item generation, 2 speedrunners, and way more features than other manhunt plugins have!
+I'm planning of adding game scenarios (random blocks etc), multiple games running at a time, and more based on the feedback you leave.
 ___
 ### Tested MC virsions
-the plugin is currently only being tested on minecraft 1.16
-
+The plugin was made for 1.16.x versions, use at your own risk in other versions!
 ___
 
 #### Quick note
 This plugin was originally made for private use, so I'm aware that there are going to be bugs.
-I haven't tested the plugin fully yet so let me know about bugs in the comments!
-I'm planning to add config and fix some bugs in the next week.
+Let me know about bugs in the comments.
+Also, I'm planning to add configuration file in the near future.
 ___
+Plugin created and published by commandROD.
+https://solo.to/command
 <br />
-Created by commandROD

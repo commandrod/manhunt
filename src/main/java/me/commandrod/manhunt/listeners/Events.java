@@ -3,7 +3,6 @@ package me.commandrod.manhunt.listeners;
 import me.commandrod.manhunt.game.Game;
 import me.commandrod.manhunt.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,9 +13,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class Events implements Listener {
 
@@ -35,18 +31,14 @@ public class Events implements Listener {
     public void compassUpdate(PlayerInteractEvent e){
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
             Player p = e.getPlayer();
-            if (p.getItemInHand().equals(Material.COMPASS)){
-                p.setCompassTarget(game.getSpeedrunner().getLocation());
-            }
+            p.setCompassTarget(game.getSpeedrunner().getLocation());
         }
     }
     @EventHandler
     public void onDeath(PlayerDeathEvent e){
-        Player p = (Player) e.getEntity();
+        Player p = e.getEntity();
         if (p == game.getSpeedrunner()){
-            game.setGame(false);
-            game.setReady(false);
-            game.border(p, true);
+            game.stopGame();
             Bukkit.broadcastMessage(Utils.color("&cThe speedrunner died! The manhunt is over."));
         }
     }
@@ -134,9 +126,9 @@ public class Events implements Listener {
     // Normal kill check
     @EventHandler
     public void onFinish(EntityDeathEvent e){
-        Player killer = (Player) e.getEntity().getKiller();
+        Player killer = e.getEntity().getKiller();
         if (e.getEntity().equals(EntityType.ENDER_DRAGON)){
-            if (killer == game.getSpeedrunner()){
+            if (killer == game.getSpeedrunner() && killer == bedPlacer){
                 game.stopGame();
                 Bukkit.broadcastMessage(Utils.color("&3The &bSpeedrunner &3has managed to finish the game! &lGG!"));
             }

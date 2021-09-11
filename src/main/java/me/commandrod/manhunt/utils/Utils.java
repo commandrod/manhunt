@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ public class Utils {
 
     Game game = new Game();
     Main main = new Main();
+
     public Utils(){}
     private Runnable timer = new Runnable() {
         int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(main.plugin(), timer, 0, 20);
@@ -86,14 +86,6 @@ public class Utils {
         game.setGame(true);
         game.setReady(true);
     }
-
-    public String HELPMESSAGE = "&3========== &bManhunt &3==========" +
-            "\n&b - &3/manhunt help - &bShows this menu." +
-            "\n&b - &3/manhunt speedrunner [player] - &bSets the speedrunner for the game" +
-            "\n&b - &3/manhunt forceend - &bStops the game in case of a bug." +
-            "\n&b - &3/manhunt start - &bStarts the game." +
-            //"\n&b - &3/manhunt reloadconfig - &bReloads the config file." +
-            "\n&b - &3/manhunt blockbypass - &bAdmin bypass to block interactions pre-game.";
 
     public Boolean loadConfigBoolean(String path){
         boolean out;

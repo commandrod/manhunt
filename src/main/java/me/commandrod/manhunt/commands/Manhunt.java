@@ -1,6 +1,7 @@
 package me.commandrod.manhunt.commands;
 
 import me.commandrod.manhunt.game.Game;
+import me.commandrod.manhunt.utils.Messages;
 import me.commandrod.manhunt.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -12,6 +13,7 @@ public class Manhunt implements CommandExecutor {
 
     Game game = new Game();
     Utils utils = new Utils();
+    Messages msgs = new Messages();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -29,7 +31,7 @@ public class Manhunt implements CommandExecutor {
                 if (args.length == 1) {
                     switch (args[0]) {
                         case "help":
-                            p.sendMessage(Utils.color(utils.HELPMESSAGE));
+                            p.sendMessage(Utils.color(msgs.HELP));
                             break;
                         case "forceend":
                             Bukkit.broadcastMessage(Utils.color("&cThe game has been force stopped."));

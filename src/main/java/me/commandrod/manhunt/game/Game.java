@@ -29,6 +29,7 @@ public class Game {
     public void stopGame(){
         setReady(false);
         setGame(false);
+        hunters.clear();
     }
 
     public void setReady(boolean ready) {
@@ -56,10 +57,6 @@ public class Game {
 
     public List<Player> getHunters() {
         return hunters;
-    }
-
-    public void setHunters(List<Player> hunters) {
-        this.hunters = hunters;
     }
 
     public Player getSpeedrunner() {
